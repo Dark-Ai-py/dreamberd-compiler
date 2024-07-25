@@ -2,6 +2,7 @@ const { resolve } = require("path");
 const readline = require("readline");
 const { Lexer } = require("./lexer");
 const { Parser } = require("./Parser");
+const { Evaluator } = require("./Evaluator");
 
 async function getStdin() {
 	const rl = readline.createInterface({
@@ -39,7 +40,9 @@ async function main() {
 		let tokens = lexer.tokenize();
 		let parser = new Parser(tokens);
 		let ast = parser.parse();
-		console.log(ast);
+		let evaluator = new Evaluator();
+		let output = evaluator.evaluate(ast);
+		console.log(output);
 
 		if (showTokens == true) {
 			console.log(tokens);
