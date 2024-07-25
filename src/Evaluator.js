@@ -28,7 +28,7 @@ class Evaluator {
 			const b = this.evaluate(ast.b);
 			const operator = ast.operatorToken.tokenValue;
 			if (this.#operations[operator]) {
-				return this.#operations[operator](a, b);
+				return this.#operations[operator](a, b).toPrecision(4); //cap the decimal place to thousandths
 			} else {
 				throw new Error(`Evaluator Error: Unsupported operator: ${operator}`);
 			}
