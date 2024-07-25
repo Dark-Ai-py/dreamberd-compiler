@@ -42,29 +42,38 @@ class Parser {
 		return current;
 	}
 
-	#parseBinaryExpression() {
-		let a = this.#nextToken();
-		while (true) {
-			switch (this.#nextToken().tokenType) {
-				case "plusToken":
-					console.log("plustoken");
-					a = new BinaryExpression(a, "+", this.#nextToken().tokenValue);
-					break;
-				case "minusToken":
-					a = new BinaryExpression(a, "-", this.#nextToken().tokenValue);
-					break;
-				case "multiplyToken":
-					a = new BinaryExpression(a, "*", this.#nextToken().tokenValue);
-					break;
-				case "divideToken":
-					a = new BinaryExpression(a, "/", this.#nextToken().tokenValue);
-					break;
-				case "endOfFileToken":
-					return a;
-				default:
-					return a;
-			}
+	#getBinaryOperatorPriority(tokenType) {
+		switch (tokenType) {
+			case "multiplyToken":
+			case "divideToken":
+				return 2;
+			case "plusToken":
+			case "minusToken":
+				return 1;
+			default:
+				return 0;
 		}
+	}
+
+	#parseBinaryExpression(parentPriority = 0) {
+		let a = this.#parsePrimaryExpression;
+
+		while (true) {
+			let priority = this.#getBinaryOperatorPriority(
+				this.#currentToken().tokenType
+			);
+			if (priority === 0 || priority <= parentPriority) {
+				break;
+			}
+			let operator = this.#nextToken();
+			let b = this.#parseBinaryExpression(priority);
+			a = new BinaryExpression(a, operator, b);
+		}
+		return a;
+	}
+
+	#parsePrimaryExpression() {
+		return this.#match("number");
 	}
 
 	parse() {
@@ -72,6 +81,8 @@ class Parser {
 		if (this.#currentToken().tokenType == "number") {
 			console.log("binary parse");
 			ast = this.#parseBinaryExpression();
+		} else {
+			ast = "unknown";
 		}
 		return ast;
 	}
