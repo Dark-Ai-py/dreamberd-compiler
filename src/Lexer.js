@@ -13,6 +13,8 @@ class Lexer {
 			{ tokenType: "notToken", regex: /^;/ },
 			{ tokenType: "unquotedStringToken", regex: /^[A-Za-z]+/ },
 			{ tokenType: "stringToken", regex: /'([^']*?)'|"([^"]*?)"/ },
+			{ tokenType: "openParenthesisToken", regex: /^\(/ },
+			{ tokenType: "closeParenthesisToken", regex: /^\)/ },
 			{ tokenType: "endOfLineNormalToken", regex: /^!+$/ },
 			{ tokenType: "endOfLineDebugToken", regex: /^\?+$/ },
 		];
@@ -25,17 +27,11 @@ class Lexer {
 	}
 
 	tokenize() {
-		// console.log(this.inputText);
 		let currentIndex = 0;
 		while (currentIndex < this.inputText.length) {
 			let matchedToken = null;
 
 			for (const tokenType of [...this.keywords, ...this.tokenTypes]) {
-				// console.log(
-				// 	`${this.inputText.slice(currentIndex)}  ${
-				// 		tokenType.tokenType
-				// 	} ${currentIndex}`
-				// );
 				const regexResult = this.inputText
 					.slice(currentIndex)
 					.match(tokenType.regex);
@@ -45,7 +41,6 @@ class Lexer {
 					currentIndex += value.length;
 					matchedToken = type;
 					if (type == "stringToken") {
-						// value = value.slice(1, -1);
 						value = regexResult[1];
 					}
 					this.tokens.push({ tokenType: type, tokenValue: value });
@@ -58,7 +53,6 @@ class Lexer {
 						currentIndex
 					)}`
 				);
-				// console.log(matchedToken);
 				return;
 			}
 		}

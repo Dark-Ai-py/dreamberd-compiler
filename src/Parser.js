@@ -56,7 +56,7 @@ class Parser {
 	}
 
 	#parseBinaryExpression(parentPriority = 0) {
-		let a = this.#parsePrimaryExpression;
+		let a = this.#parsePrimaryExpression();
 
 		while (true) {
 			let priority = this.#getBinaryOperatorPriority(
@@ -73,17 +73,25 @@ class Parser {
 	}
 
 	#parsePrimaryExpression() {
-		return this.#match("number");
+		const firstToken = this.#currentToken();
+
+		switch (firstToken.tokenType) {
+			case "openParenthesisToken":
+				let a = this.#nextToken();
+				let operator = this.#parseBinaryExpression();
+				let b = this.#match("closeParenthesisToken");
+				return new ParenthesisedExpression(a, operator, b);
+			case "unquotedStringToken":
+				let identifierToken = this.#nextToken();
+				return new VariableAccess(identifierToken.tokenValue);
+			default:
+				return this.#match("number");
+		}
 	}
 
 	parse() {
-		let ast;
-		if (this.#currentToken().tokenType == "number") {
-			console.log("binary parse");
-			ast = this.#parseBinaryExpression();
-		} else {
-			ast = "unknown";
-		}
+		let ast = this.#parseBinaryExpression();
+
 		return ast;
 	}
 }
