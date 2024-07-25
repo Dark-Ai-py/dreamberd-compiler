@@ -38,15 +38,16 @@ async function main() {
 
 		let lexer = new Lexer(input);
 		let tokens = lexer.tokenize();
+
+		if (showTokens == true) {
+			console.log(tokens);
+		}
+
 		let parser = new Parser(tokens);
 		let ast = parser.parse();
 		let evaluator = new Evaluator();
 		let output = evaluator.evaluate(ast);
 		console.log(output);
-
-		if (showTokens == true) {
-			console.log(tokens);
-		}
 	}
 }
 main();

@@ -3,7 +3,7 @@ class Lexer {
 		this.inputText = inputText;
 		this.tokens = [];
 		this.tokenTypes = [
-			{ tokenType: "number", regex: /^\d+/ },
+			{ tokenType: "number", regex: /^-?[0-9]\d*(\.\d+)?/ },
 			{ tokenType: "plusToken", regex: /^\+/ },
 			{ tokenType: "minusToken", regex: /^\-/ },
 			{ tokenType: "multiplyToken", regex: /^\*/ },
@@ -42,6 +42,9 @@ class Lexer {
 					matchedToken = type;
 					if (type == "stringToken") {
 						value = regexResult[1];
+					}
+					if (type == "number" && value.match(/^\-/)) {
+						this.tokens.push({ tokenType: "plusToken", tokenValue: "+" });
 					}
 					this.tokens.push({ tokenType: type, tokenValue: value });
 					break;
