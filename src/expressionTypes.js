@@ -40,6 +40,12 @@ class ParenthesisedExpression extends SyntaxNode {
 	}
 }
 
+class VariableModification extends SyntaxNode {
+	constructor(variableName, newValue) {
+		this.variableName = variableName;
+		this.newValue = newValue;
+	}
+}
 exports.SyntaxNode = SyntaxNode;
 exports.BinaryExpression = BinaryExpression;
 exports.VariableAssignment = VariableAssignment;

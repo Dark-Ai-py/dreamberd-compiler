@@ -108,6 +108,8 @@ class Parser {
 		return new VariableAssignment(type, name, value);
 	}
 
+	#parseVariableReassignment() {}
+
 	parse() {
 		let ast;
 
