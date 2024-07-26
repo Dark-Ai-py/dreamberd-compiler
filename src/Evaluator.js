@@ -30,14 +30,12 @@ class Evaluator {
 			if (this.#operations[operator]) {
 				return this.#operations[operator](a, b).toPrecision(4); //cap the decimal place to thousandths
 			} else {
-				throw new Error(`Evaluator Error: Unsupported operator: ${operator}`);
+				console.log(`Evaluator Error: Unsupported operator: ${operator}`);
 			}
 		} else if (ast.tokenType === "number") {
 			return parseFloat(ast.tokenValue);
 		} else {
-			throw new Error(
-				`Evaluator Error: Unsupported Syntax Node: ${ast.tokenType}`
-			);
+			console.log(`Evaluator Error: Unsupported Syntax Node: ${ast.tokenType}`);
 		}
 	}
 }

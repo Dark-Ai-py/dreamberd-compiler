@@ -31,7 +31,7 @@ class Parser {
 		}
 		console.log(
 			`Parser error: bad token type: ${
-				this.#currentToken.tokenType
+				this.#currentToken().tokenType
 			}, expected ${type}`
 		);
 	}
@@ -65,10 +65,12 @@ class Parser {
 			if (priority === 0 || priority <= parentPriority) {
 				break;
 			}
+
 			let operator = this.#nextToken();
 			let b = this.#parseBinaryExpression(priority);
 			a = new BinaryExpression(a, operator, b);
 		}
+
 		return a;
 	}
 
@@ -89,9 +91,40 @@ class Parser {
 		}
 	}
 
-	parse() {
-		let ast = this.#parseBinaryExpression();
+	#parseVariableAssignment() {
+		let type = this.#nextToken().tokenType;
+		let name = this.#match("unquotedStringToken").tokenValue;
+		let assignment = this.#match("assignToken");
+		let value;
+		if (this.#peek(1).tokenType == "endOfFileToken") {
+			value = new BinaryExpression(
+				this.#currentToken().tokenValue,
+				{ tokenType: "plusToken", tokenValue: "+" },
+				"0"
+			);
+		} else {
+			value = this.#parseBinaryExpression();
+		}
+		return new VariableAssignment(type, name, value);
+	}
 
+	parse() {
+		let ast;
+
+		switch (this.#currentToken().tokenType) {
+			case "constConstToken":
+			case "constVarToken":
+			case "varConstToken":
+			case "varVarToken":
+				ast = this.#parseVariableAssignment();
+				break;
+			case "unquotedStringToken":
+
+			default:
+				console.log(`bad`);
+				ast = this.#parseBinaryExpression();
+				break;
+		}
 		return ast;
 	}
 }

@@ -19,10 +19,10 @@ class Lexer {
 			{ tokenType: "endOfLineDebugToken", regex: /^\?+$/ },
 		];
 		this.keywords = [
-			{ tokenType: "constConstToken", regex: /^const\sconst/ },
-			{ tokenType: "constVarToken", regex: /^const\svar/ },
-			{ tokenType: "varConstToken", regex: /^var\sconst/ },
-			{ tokenType: "varVarToken", regex: /^var\svar/ },
+			{ tokenType: "constConstToken", regex: /^const const/ },
+			{ tokenType: "constVarToken", regex: /^const var/ },
+			{ tokenType: "varConstToken", regex: /^var const/ },
+			{ tokenType: "varVarToken", regex: /^var var/ },
 		];
 	}
 

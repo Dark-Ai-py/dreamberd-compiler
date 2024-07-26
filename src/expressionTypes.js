@@ -16,10 +16,10 @@ class BinaryExpression extends SyntaxNode {
 }
 
 class VariableAssignment extends SyntaxNode {
-	constructor(variableName, identifierToken, variableValue) {
+	constructor(variableType, variableName, variableValue) {
 		super();
+		this.variableType = variableType;
 		this.variableName = variableName;
-		this.identifierToken = identifierToken;
 		this.variableValue = variableValue;
 	}
 }

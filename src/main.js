@@ -45,9 +45,10 @@ async function main() {
 
 		let parser = new Parser(tokens);
 		let ast = parser.parse();
-		let evaluator = new Evaluator();
+		console.log(ast);
+		/* let evaluator = new Evaluator();
 		let output = evaluator.evaluate(ast);
-		console.log(output);
+		console.log(output); */
 	}
 }
 main();
