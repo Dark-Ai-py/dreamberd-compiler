@@ -3,24 +3,35 @@ const {
 	ParenthesisedExpression,
 	VariableAssignment,
 	VariableAccess,
+	VariableModification,
 } = require("./expressionTypes");
 
 class Evaluator {
-	#ast;
 	#operations;
 	constructor(ast) {
-		this.#ast = ast;
 		this.#operations = {
 			"+": (a, b) => a + b,
 			"-": (a, b) => a - b,
 			"*": (a, b) => a * b,
 			"/": (a, b) => a / b,
 		};
+		this.variables = [];
 	}
 
 	evaluate(ast) {
 		if (ast instanceof ParenthesisedExpression) {
 			ast = ast.expression;
+		}
+
+		if (ast instanceof VariableAssignment) {
+			this.variables = [
+				...this.variables,
+				{
+					type: ast.variableType,
+					name: ast.variableName,
+					value: this.evaluate(ast.variableValue),
+				},
+			];
 		}
 
 		if (ast instanceof BinaryExpression) {
@@ -32,10 +43,10 @@ class Evaluator {
 			} else {
 				console.log(`Evaluator Error: Unsupported operator: ${operator}`);
 			}
-		} else if (ast.tokenType === "number") {
+		} else if (ast.tokenType == "number") {
 			return parseFloat(ast.tokenValue);
 		} else {
-			console.log(`Evaluator Error: Unsupported Syntax Node: ${ast.tokenType}`);
+			console.log(`Evaluator Error: Unsupported Syntax Node: ${ast}`);
 		}
 	}
 }

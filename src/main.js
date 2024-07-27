@@ -3,6 +3,7 @@ const readline = require("readline");
 const { Lexer } = require("./lexer");
 const { Parser } = require("./Parser");
 const { Evaluator } = require("./Evaluator");
+const { log } = require("console");
 
 async function getStdin() {
 	const rl = readline.createInterface({
@@ -46,9 +47,10 @@ async function main() {
 		let parser = new Parser(tokens);
 		let ast = parser.parse();
 		console.log(ast);
-		/* let evaluator = new Evaluator();
+
+		let evaluator = new Evaluator();
 		let output = evaluator.evaluate(ast);
-		console.log(output); */
+		console.log(output);
 	}
 }
 main();
