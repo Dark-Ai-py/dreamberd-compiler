@@ -9,7 +9,7 @@ class Lexer {
 			{ tokenType: "multiplyToken", regex: /^\*/ },
 			{ tokenType: "divideToken", regex: /^\// },
 			{ tokenType: "whitespace", regex: /^\s/ },
-			{ tokenType: "assignToken", regex: /^=/ },
+			{ tokenType: "assignToken", regex: /^\+=|^\-=|^=/ },
 			{ tokenType: "notToken", regex: /^;/ },
 			{ tokenType: "unquotedStringToken", regex: /^[A-Za-z]+/ },
 			{ tokenType: "stringToken", regex: /'([^']*?)'|"([^"]*?)"/ },

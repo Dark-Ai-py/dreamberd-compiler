@@ -3,6 +3,7 @@ const {
 	VariableAssignment,
 	VariableAccess,
 	ParenthesisedExpression,
+	VariableModification,
 } = require("./expressionTypes");
 
 class Parser {
@@ -96,19 +97,31 @@ class Parser {
 		let name = this.#match("unquotedStringToken").tokenValue;
 		let assignment = this.#match("assignToken");
 		let value;
-		if (this.#peek(1).tokenType == "endOfFileToken") {
-			value = new BinaryExpression(
-				this.#currentToken().tokenValue,
-				{ tokenType: "plusToken", tokenValue: "+" },
-				"0"
-			);
+		if (
+			this.#peek(1).tokenType ==
+			("endOfLineDebugToken" || "endOfLineNormalToken")
+		) {
+			value = this.#currentToken().tokenValue;
 		} else {
 			value = this.#parseBinaryExpression();
 		}
 		return new VariableAssignment(type, name, value);
 	}
 
-	#parseVariableReassignment() {}
+	#parseVariableReassignment() {
+		let name = this.#match("unquotedStringToken");
+		let assignmentOperator = this.#nextToken();
+		let value;
+		if (
+			this.#peek(1).tokenType ==
+			("endOfLineDebugToken" || "endOfLineNormalToken")
+		) {
+			value = this.#currentToken.tokenValue;
+		} else {
+			value = this.#parseBinaryExpression();
+		}
+		return new VariableModification(name, assignmentOperator, value);
+	}
 
 	parse() {
 		let ast;
@@ -121,9 +134,9 @@ class Parser {
 				ast = this.#parseVariableAssignment();
 				break;
 			case "unquotedStringToken":
-
+				ast = this.#parseVariableReassignment();
+				break;
 			default:
-				console.log(`bad`);
 				ast = this.#parseBinaryExpression();
 				break;
 		}
