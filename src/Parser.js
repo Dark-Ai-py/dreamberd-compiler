@@ -83,6 +83,8 @@ class Parser {
 			case "unquotedStringToken":
 				let identifierToken = this.#nextToken();
 				return new VariableAccess(identifierToken.tokenValue);
+			case "stringToken":
+				return this.#match("stringToken");
 			default:
 				return this.#match("number");
 		}

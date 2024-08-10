@@ -28,7 +28,7 @@ class Evaluator {
 				variableName: ast.variableName,
 				variableValue: this.evaluate(ast.variableValue),
 			});
-			return;
+			return "Variable Assignment";
 		}
 		if (ast instanceof BinaryExpression) {
 			const a = this.evaluate(ast.a);

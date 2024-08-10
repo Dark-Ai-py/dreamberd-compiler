@@ -1,10 +1,10 @@
-const { resolve } = require("path");
+const fs = require("fs");
 const readline = require("readline");
 const { Lexer } = require("./lexer");
 const { Parser } = require("./Parser");
 const { Evaluator } = require("./Evaluator");
-const { log } = require("console");
 
+//make the terminal interface
 async function getStdin() {
 	const rl = readline.createInterface({
 		input: process.stdin,
@@ -19,12 +19,37 @@ async function getStdin() {
 	});
 }
 
+//run the main code
+
+function readFile(path) {
+	try {
+		const res = fs.readFileSync(path, { encoding: "utf8" });
+		return res.replace("\r", "").split("\n");
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+function parseLine(input) {
+	let lexer = new Lexer(input);
+	let tokens = lexer.tokenize();
+
+	let parser = new Parser(tokens);
+	let ast = parser.parse();
+
+	let evaluator = new Evaluator();
+	let output = evaluator.evaluate(ast);
+
+	return output;
+}
+
 async function main() {
 	let showTokens = false;
 
 	while (true) {
 		const input = await getStdin();
-		if (input === "#quit") {
+		//commands when using the terminal
+		/* if (input === "#quit") {
 			console.log("Exiting");
 			break;
 		} else if (input === "#clear") {
@@ -35,22 +60,13 @@ async function main() {
 			showTokens = !showTokens;
 			console.log(showTokens ? "Showing tokens" : "Hiding tokens");
 			continue;
+		} */
+		const file = readFile("helloWorld.dream");
+		for (let i = 0; i < file.length; i++) {
+			console.log(parseLine(file[i]));
 		}
 
-		let lexer = new Lexer(input);
-		let tokens = lexer.tokenize();
-
-		if (showTokens == true) {
-			console.log(tokens);
-		}
-
-		let parser = new Parser(tokens);
-		let ast = parser.parse();
-		console.log(ast);
-
-		let evaluator = new Evaluator();
-		let output = evaluator.evaluate(ast);
-		console.log(output);
+		break;
 	}
 }
 main();
