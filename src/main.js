@@ -1,9 +1,10 @@
-const { resolve } = require("path");
+const fs = require("fs");
 const readline = require("readline");
 const { Lexer } = require("./lexer");
 const { Parser } = require("./Parser");
 const { Evaluator } = require("./Evaluator");
 
+//make the terminal interface
 async function getStdin() {
 	const rl = readline.createInterface({
 		input: process.stdin,
@@ -18,12 +19,40 @@ async function getStdin() {
 	});
 }
 
+//run the main code
+
+function readFile(path) {
+	try {
+		let res = fs.readFileSync(path, { encoding: "utf8" });
+		res = res.replaceAll("\r", "").split("\n");
+
+		return res.filter((item) => item !== "");
+	} catch (error) {
+		console.log(`File fetch Error: ${error}`);
+	}
+}
+
+function parseLine(input, variables) {
+	let lexer = new Lexer(input);
+	let tokens = lexer.tokenize();
+
+	let parser = new Parser(tokens);
+	let ast = parser.parse();
+
+	let evaluator = new Evaluator(variables);
+	let output = evaluator.evaluate(ast);
+	let variable = evaluator.variables;
+
+	return [output, variable];
+}
+
 async function main() {
 	let showTokens = false;
 
 	while (true) {
 		const input = await getStdin();
-		if (input === "#quit") {
+		//commands when using the terminal
+		/* if (input === "#quit") {
 			console.log("Exiting");
 			break;
 		} else if (input === "#clear") {
@@ -34,21 +63,18 @@ async function main() {
 			showTokens = !showTokens;
 			console.log(showTokens ? "Showing tokens" : "Hiding tokens");
 			continue;
+		} */
+		const file = readFile("helloWorld.dream");
+		console.log(file);
+
+		let variables = [];
+		for (let i = 0; i < file.length; i++) {
+			let parsedOutput = parseLine(file[i], variables);
+			console.log(parsedOutput[0]);
+			variables.push(parsedOutput[1]);
 		}
 
-		let lexer = new Lexer(input);
-		let tokens = lexer.tokenize();
-
-		if (showTokens == true) {
-			console.log(tokens);
-		}
-
-		let parser = new Parser(tokens);
-		let ast = parser.parse();
-		console.log(ast);
-		/* let evaluator = new Evaluator();
-		let output = evaluator.evaluate(ast);
-		console.log(output); */
+		break;
 	}
 }
 main();

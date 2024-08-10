@@ -32,9 +32,7 @@ class Lexer {
 			let matchedToken = null;
 
 			for (const tokenType of [...this.keywords, ...this.tokenTypes]) {
-				const regexResult = this.inputText
-					.slice(currentIndex)
-					.match(tokenType.regex);
+				const regexResult = this.inputText.slice(currentIndex).match(tokenType.regex);
 				if (regexResult && regexResult.index === 0) {
 					let value = regexResult[0];
 					const type = tokenType.tokenType;
@@ -51,11 +49,7 @@ class Lexer {
 				}
 			}
 			if (!matchedToken) {
-				console.log(
-					`Lexer error: unrecognized token ${this.inputText.slice(
-						currentIndex
-					)}`
-				);
+				console.log(`Lexer error: unrecognized token ${this.inputText.slice(currentIndex)}`);
 				return;
 			}
 		}
