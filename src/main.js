@@ -26,21 +26,22 @@ function readFile(path) {
 		const res = fs.readFileSync(path, { encoding: "utf8" });
 		return res.replace("\r", "").split("\n");
 	} catch (error) {
-		console.log(error);
+		console.log(`File fetch Error: ${error}`);
 	}
 }
 
-function parseLine(input) {
-	let lexer = new Lexer(input);
-	let tokens = lexer.tokenize();
+function parseLine(input, variables) {
+	let lexer = new Lexer();
+	let tokens = lexer.tokenize(input);
 
 	let parser = new Parser(tokens);
 	let ast = parser.parse();
 
-	let evaluator = new Evaluator();
+	let evaluator = new Evaluator(variables);
 	let output = evaluator.evaluate(ast);
+	let variable = evaluator.variables;
 
-	return output;
+	return [output, variable];
 }
 
 async function main() {
@@ -62,8 +63,11 @@ async function main() {
 			continue;
 		} */
 		const file = readFile("helloWorld.dream");
+		let variables = [];
 		for (let i = 0; i < file.length; i++) {
-			console.log(parseLine(file[i]));
+			let parsedOutput = parseLine(file[i], variables);
+			console.log(parsedOutput[0]);
+			variables.push(parsedOutput[1]);
 		}
 
 		break;

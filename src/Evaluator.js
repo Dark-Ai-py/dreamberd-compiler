@@ -8,14 +8,14 @@ const {
 
 class Evaluator {
 	#operations;
-	constructor() {
+	constructor(variables) {
 		this.#operations = {
 			"+": (a, b) => a + b,
 			"-": (a, b) => a - b,
 			"*": (a, b) => a * b,
 			"/": (a, b) => a / b,
 		};
-		this.variables = [];
+		this.variables = variables;
 	}
 
 	evaluate(ast) {
@@ -29,6 +29,19 @@ class Evaluator {
 				variableValue: this.evaluate(ast.variableValue),
 			});
 			return "Variable Assignment";
+		}
+		if (ast instanceof VariableAccess) {
+			const getIndex = (arr, name) => {
+				const mappedArr = arr.map((obj) => obj["variableName"]);
+				const index = mappedArr.indexOf(name);
+				if (index < 0) {
+					console.log(`Evaluator Error: No such Variable Exists, ${mappedArr}`);
+				} else {
+					return arr[index].variableValue;
+				}
+			};
+
+			return getIndex(this.variables, ast.variableName);
 		}
 		if (ast instanceof BinaryExpression) {
 			const a = this.evaluate(ast.a);

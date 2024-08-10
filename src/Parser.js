@@ -104,11 +104,7 @@ class Parser {
 		let name = this.#match("unquotedStringToken");
 		let assignmentOperator = this.#nextToken();
 		let value;
-		if (this.#peek(1).tokenType == ("endOfLineDebugToken" || "endOfLineNormalToken")) {
-			value = this.#currentToken.tokenValue;
-		} else {
-			value = this.#parseBinaryExpression();
-		}
+		value = this.#parseBinaryExpression();
 		return new VariableModification(name, assignmentOperator, value);
 	}
 
@@ -122,7 +118,7 @@ class Parser {
 			case "varVarToken":
 				ast = this.#parseVariableAssignment();
 				break;
-			case "unquotedStringToken":
+			case "unquotedStringToken" && this.#peek(1) == "assignToken":
 				ast = this.#parseVariableReassignment();
 				break;
 			default:
