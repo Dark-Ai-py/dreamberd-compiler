@@ -31,9 +31,7 @@ class Parser {
 			return this.#nextToken();
 		}
 		console.log(
-			`Parser error: bad token type: ${
-				this.#currentToken().tokenType
-			}, expected ${type}`
+			`Parser error: bad token type: ${this.#currentToken().tokenType}, expected ${type}`,
 		);
 	}
 	//returns current token and moves position by 1
@@ -60,9 +58,7 @@ class Parser {
 		let a = this.#parsePrimaryExpression();
 
 		while (true) {
-			let priority = this.#getBinaryOperatorPriority(
-				this.#currentToken().tokenType
-			);
+			let priority = this.#getBinaryOperatorPriority(this.#currentToken().tokenType);
 			if (priority === 0 || priority <= parentPriority) {
 				break;
 			}
@@ -97,14 +93,8 @@ class Parser {
 		let name = this.#match("unquotedStringToken").tokenValue;
 		let assignment = this.#match("assignToken");
 		let value;
-		if (
-			this.#peek(1).tokenType ==
-			("endOfLineDebugToken" || "endOfLineNormalToken")
-		) {
-			value = this.#currentToken().tokenValue;
-		} else {
-			value = this.#parseBinaryExpression();
-		}
+
+		value = this.#parseBinaryExpression();
 		return new VariableAssignment(type, name, value);
 	}
 
@@ -112,10 +102,7 @@ class Parser {
 		let name = this.#match("unquotedStringToken");
 		let assignmentOperator = this.#nextToken();
 		let value;
-		if (
-			this.#peek(1).tokenType ==
-			("endOfLineDebugToken" || "endOfLineNormalToken")
-		) {
+		if (this.#peek(1).tokenType == ("endOfLineDebugToken" || "endOfLineNormalToken")) {
 			value = this.#currentToken.tokenValue;
 		} else {
 			value = this.#parseBinaryExpression();

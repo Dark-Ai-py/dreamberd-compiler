@@ -8,7 +8,7 @@ const {
 
 class Evaluator {
 	#operations;
-	constructor(ast) {
+	constructor() {
 		this.#operations = {
 			"+": (a, b) => a + b,
 			"-": (a, b) => a - b,
@@ -20,33 +20,31 @@ class Evaluator {
 
 	evaluate(ast) {
 		if (ast instanceof ParenthesisedExpression) {
-			ast = ast.expression;
+			return this.evaluate(ast.expression);
 		}
-
 		if (ast instanceof VariableAssignment) {
-			this.variables = [
-				...this.variables,
-				{
-					type: ast.variableType,
-					name: ast.variableName,
-					value: this.evaluate(ast.variableValue),
-				},
-			];
+			this.variables.push({
+				variableType: ast.variableType,
+				variableName: ast.variableName,
+				variableValue: this.evaluate(ast.variableValue),
+			});
+			return;
 		}
-
 		if (ast instanceof BinaryExpression) {
 			const a = this.evaluate(ast.a);
 			const b = this.evaluate(ast.b);
 			const operator = ast.operatorToken.tokenValue;
+
 			if (this.#operations[operator]) {
-				return this.#operations[operator](a, b).toPrecision(4); //cap the decimal place to thousandths
+				return this.#operations[operator](a, b);
 			} else {
-				console.log(`Evaluator Error: Unsupported operator: ${operator}`);
+				console.log(`Evaluator Error: Unsupported Operator ${operator}`);
 			}
-		} else if (ast.tokenType == "number") {
+		}
+		if (ast.tokenType == "number") {
 			return parseFloat(ast.tokenValue);
 		} else {
-			console.log(`Evaluator Error: Unsupported Syntax Node: ${ast}`);
+			console.log(`Evaluator Error: Unsupported Syntax Node(u broke something) ${ast}`);
 		}
 	}
 }

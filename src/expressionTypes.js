@@ -48,6 +48,7 @@ class VariableModification extends SyntaxNode {
 		this.newValue = newValue;
 	}
 }
+
 exports.SyntaxNode = SyntaxNode;
 exports.BinaryExpression = BinaryExpression;
 exports.VariableAssignment = VariableAssignment;
