@@ -1,5 +1,6 @@
 class Lexer {
-	constructor() {
+	constructor(inputText) {
+		this.inputText = inputText;
 		this.tokens = [];
 		this.tokenTypes = [
 			{ tokenType: "number", regex: /^-?[0-9]\d*(\.\d+)?/ },
@@ -25,13 +26,13 @@ class Lexer {
 		];
 	}
 
-	tokenize(inputText) {
+	tokenize() {
 		let currentIndex = 0;
-		while (currentIndex < inputText.length) {
+		while (currentIndex < this.inputText.length) {
 			let matchedToken = null;
 
 			for (const tokenType of [...this.keywords, ...this.tokenTypes]) {
-				const regexResult = inputText.slice(currentIndex).match(tokenType.regex);
+				const regexResult = this.inputText.slice(currentIndex).match(tokenType.regex);
 				if (regexResult && regexResult.index === 0) {
 					let value = regexResult[0];
 					const type = tokenType.tokenType;
@@ -48,7 +49,7 @@ class Lexer {
 				}
 			}
 			if (!matchedToken) {
-				console.log(`Lexer error: unrecognized token \"${inputText.slice(currentIndex)}\"`);
+				console.log(`Lexer error: unrecognized token ${this.inputText.slice(currentIndex)}`);
 				return;
 			}
 		}

@@ -1,3 +1,2 @@
-var var name = 9!
+const const name = 11!!
 name + 11!
-name + name!
