@@ -32,18 +32,17 @@ function readFile(path) {
 	}
 }
 
-function parseLine(input, variables) {
+function parseLine(input) {
 	let lexer = new Lexer(input);
 	let tokens = lexer.tokenize();
 
 	let parser = new Parser(tokens);
 	let ast = parser.parse();
 
-	let evaluator = new Evaluator(variables);
+	let evaluator = new Evaluator();
 	let output = evaluator.evaluate(ast);
-	let variable = evaluator.variables;
 
-	return [output, variable];
+	return [output];
 }
 
 async function main() {
@@ -67,11 +66,9 @@ async function main() {
 		const file = readFile("helloWorld.dream");
 		console.log(file);
 
-		let variables = [];
 		for (let i = 0; i < file.length; i++) {
-			let parsedOutput = parseLine(file[i], variables);
+			let parsedOutput = parseLine(file[i])
 			console.log(parsedOutput[0]);
-			variables.push(parsedOutput[1]);
 		}
 
 		break;
