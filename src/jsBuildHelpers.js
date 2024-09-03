@@ -2,11 +2,12 @@ class ClassNode {
 	constructor() {}
 }
 class Variable extends ClassNode {
-	#variableValue;
+	variableValue;
 	constructor(variableType, variableName, variableValue) {
+		super();
 		this.variableType = variableType;
 		this.variableName = variableName;
-		this.#variableValue = variableValue;
+		this.variableValue = variableValue;
 	}
 	reAssign(newValue) {
 		switch (this.variableType) {
@@ -18,10 +19,10 @@ class Variable extends ClassNode {
 				console.log("Error: cannot reassign variable");
 				break;
 			case "varConstToken":
-				this.#variableValue = newValue;
+				this.variableValue = newValue;
 				break;
 			case "varVarToken":
-				this.#variableValue = newValue;
+				this.variableValue = newValue;
 				break;
 		}
 	}
@@ -31,12 +32,13 @@ class Variable extends ClassNode {
 				console.log("Error: cannot mutate variable");
 				break;
 			case "constVarToken":
-				return this.#variableValue;
+				return this.variableValue;
 			case "varConstToken":
 				console.log("Error: cannot mutate variable");
 				break;
 			case "varVarToken":
-				return this.#variableValue;
+				return this.variableValue;
 		}
 	}
 }
+exports.Variable = Variable;
