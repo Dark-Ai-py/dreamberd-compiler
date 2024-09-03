@@ -67,7 +67,7 @@ async function main() {
 		console.log(file);
 
 		for (let i = 0; i < file.length; i++) {
-			let parsedOutput = parseLine(file[i])
+			let parsedOutput = parseLine(file[i]);
 			console.log(parsedOutput[0]);
 		}
 
