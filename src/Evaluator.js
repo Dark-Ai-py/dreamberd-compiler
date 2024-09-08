@@ -4,12 +4,24 @@ const {
 	VariableAssignment,
 	VariableAccess,
 	VariableModification,
+	Function,
 } = require("./expressionTypes");
 
 class Evaluator {
-	constructor() {}
-
+	constructor() {
+		this.functionList = [{ functionType: "print", output: `console.log(%i)` }];
+	}
+	getFunction(func, input) {
+		for (let i = 0; i < this.functionList.length; i++) {
+			if (func == this.functionList[i].functionType) {
+				return this.functionList[i].output.replace("%i", input);
+			}
+		}
+	}
 	evaluate(ast) {
+		if (ast instanceof Function) {
+			return this.getFunction(ast.functionType, this.evaluate(ast.functionInput));
+		}
 		if (ast instanceof ParenthesisedExpression) {
 			return `(${this.evaluate(ast.expression)}));`;
 		}

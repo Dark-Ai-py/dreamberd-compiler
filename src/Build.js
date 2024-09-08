@@ -1,4 +1,5 @@
 const { Variable } = require("./jsBuildHelpers.js");
-
-let name = new Variable("constConstToken", "name", 11);
-console.log(name.variableValue + 11);
+let x = new Variable('constConstToken','x',14)
+let y = new Variable('varVarToken','y',2)
+y.variableValue
+console.log(x.variableValue * y.variableValue)

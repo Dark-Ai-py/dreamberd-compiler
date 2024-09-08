@@ -48,6 +48,13 @@ class VariableModification extends SyntaxNode {
 		this.newValue = newValue;
 	}
 }
+class Function extends SyntaxNode {
+	constructor(functionType, functionInput) {
+		super();
+		this.functionType = functionType;
+		this.functionInput = functionInput;
+	}
+}
 
 exports.SyntaxNode = SyntaxNode;
 exports.BinaryExpression = BinaryExpression;
@@ -55,3 +62,4 @@ exports.VariableAssignment = VariableAssignment;
 exports.VariableAccess = VariableAccess;
 exports.ParenthesisedExpression = ParenthesisedExpression;
 exports.VariableModification = VariableModification;
+exports.Function = Function;

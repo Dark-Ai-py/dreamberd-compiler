@@ -38,18 +38,39 @@ function parseLine(input) {
 
 	let parser = new Parser(tokens);
 	let ast = parser.parse();
+	console.log(ast);
 
 	let evaluator = new Evaluator();
 	let output = evaluator.evaluate(ast);
 
-	return [output];
+	return output;
+}
+function writeBuild(content) {
+	var fullOutput = ['const { Variable } = require("./jsBuildHelpers.js");'];
+	for (let i = 0; i < content.length; i++) {
+		let parsedOutput = parseLine(content[i]);
+		fullOutput.push(parsedOutput);
+	}
+	var completeBuild = "";
+	fullOutput.forEach((e) => {
+		completeBuild = completeBuild + e + "\n";
+	});
+
+	const filePath = "./build.js";
+	fs.writeFile(filePath, completeBuild, (err) => {
+		if (err) {
+			console.error("Error writing to file:", err);
+		} else {
+			console.log("File written successfully!");
+		}
+	});
 }
 
 async function main() {
 	let showTokens = false;
 
 	while (true) {
-		const input = await getStdin();
+		//const input = await getStdin();
 		//commands when using the terminal
 		/* if (input === "#quit") {
 			console.log("Exiting");
@@ -65,12 +86,7 @@ async function main() {
 		} */
 		const file = readFile("helloWorld.dream");
 		console.log(file);
-
-		for (let i = 0; i < file.length; i++) {
-			let parsedOutput = parseLine(file[i]);
-			console.log(parsedOutput[0]);
-		}
-
+		writeBuild(file);
 		break;
 	}
 }

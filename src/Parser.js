@@ -4,6 +4,7 @@ const {
 	VariableAccess,
 	ParenthesisedExpression,
 	VariableModification,
+	Function,
 } = require("./expressionTypes");
 
 class Parser {
@@ -125,6 +126,13 @@ class Parser {
 				ast = this.#parseBinaryExpression();
 				break;
 		}
+		if (
+			this.#tokens[this.#position].tokenType == "endOfLineDebugToken" &&
+			ast instanceof (BinaryExpression || VariableAccess || ParenthesisedExpression)
+		) {
+			ast = new Function("print", ast);
+		}
+
 		return ast;
 	}
 }
