@@ -1,2 +1,4 @@
-const const x = 14?
-var const y = 2!
+const const x = 14!
+var var y = 12!!
+x?
+y??

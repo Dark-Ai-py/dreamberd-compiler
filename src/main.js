@@ -32,18 +32,26 @@ function readFile(path) {
 	}
 }
 
+function sortByImportance(lines) {
+	return lines
+		.map((line) => ({
+			original: line,
+			Importance: line.match(/[\!]+$|[?]+$/)?.[0]?.length || 0,
+		}))
+		.sort((a, b) => b.Importance - a.Importance)
+		.map((obj) => obj.original);
+}
+
 function parseLine(input) {
 	let lexer = new Lexer(input);
 	let tokens = lexer.tokenize();
 	console.log(tokens);
 
 	let parser = new Parser(tokens);
-	let ast = parser.parse()[0];
-	let extra = parser.parse()[1];
-	console.log(ast);
+	let fullAst = parser.parse();
 
 	let evaluator = new Evaluator();
-	let output = evaluator.evaluate(ast, extra);
+	let output = evaluator.evaluate(fullAst[0], fullAst[1]);
 
 	return output;
 }
@@ -88,7 +96,8 @@ async function main() {
 		} */
 		const file = readFile("helloWorld.dream");
 		console.log(file);
-		writeBuild(file);
+		const sortedFile = sortByImportance(file);
+		writeBuild(sortedFile);
 		break;
 	}
 }

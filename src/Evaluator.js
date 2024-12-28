@@ -11,15 +11,17 @@ const {
 class Evaluator {
 	constructor() {}
 
-	evaluate(ast, extra) {
+	evaluate(ast, linetype) {
 		if (ast instanceof Float) {
 			return ast.floatValue;
 		}
 		if (ast instanceof VariableAssignment) {
-			if (extra == "debug") {
+			if (linetype == "debug") {
 				return `let ${ast.variableName} = new Variable('${ast.variableType}','${
 					ast.variableName
-				}',${this.evaluate(ast.variableValue)})\n console.log(${ast.variableName})`;
+				}',${this.evaluate(ast.variableValue)})\nconsole.log("${ast.variableName} = "+ ${
+					ast.variableName
+				}.variableValue)`;
 			} else {
 				return `let ${ast.variableName} = new Variable('${ast.variableType}','${
 					ast.variableName
@@ -27,7 +29,11 @@ class Evaluator {
 			}
 		}
 		if (ast instanceof VariableAccess) {
-			return `${ast.variableName}.variableValue`;
+			if (linetype == "debug") {
+				return `console.log(${ast.variableName}.variableValue)`;
+			} else {
+				return `${ast.variableName}.variableValue`;
+			}
 		}
 		if (ast instanceof VariableModification) {
 			return `${ast.variableName}.reAssign(${ast.newValue})`;

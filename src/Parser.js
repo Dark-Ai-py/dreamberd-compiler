@@ -74,6 +74,21 @@ class Parser {
 		}
 	}
 
+	#parseString() {
+		if (this.#currentToken().tokenType === "unquotedStringToken") {
+			if (this.#peek(1).tokenType === "assignToken") {
+				return new VariableModification(
+					this.#nextToken(2).tokenValue,
+					this.#parseBinaryExpression(),
+				);
+			} else if (this.#peek(1).tokenClass === "lineEndClass") {
+				return new VariableAccess(this.#nextToken().tokenValue);
+			}
+		} else {
+			throw new Error("Parser error: Why is there an string here?");
+		}
+	}
+
 	parse() {
 		var ast;
 		try {
@@ -81,6 +96,8 @@ class Parser {
 				ast = this.#parseVariableAssignment();
 			} else if (this.#currentToken().tokenClass === "binaryClass") {
 				ast = this.#parseBinaryExpression();
+			} else if (this.#currentToken().tokenClass === "stringClass") {
+				ast = this.#parseString();
 			}
 		} catch (error) {
 			console.error(`Parser error: ${error}`);
