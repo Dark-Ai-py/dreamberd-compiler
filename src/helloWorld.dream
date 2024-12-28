@@ -1,5 +1,2 @@
 const const x = 14?
-var const y = 2!!
-y = 3
-x?
-y?
+var const y = 2!

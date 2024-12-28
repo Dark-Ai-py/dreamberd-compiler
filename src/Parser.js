@@ -1,3 +1,4 @@
+const { parse } = require("vue/compiler-sfc");
 const {
 	BinaryExpression,
 	VariableAssignment,
@@ -5,6 +6,7 @@ const {
 	ParenthesisedExpression,
 	VariableModification,
 	Function,
+	Float,
 } = require("./expressionTypes");
 
 class Parser {
@@ -18,7 +20,7 @@ class Parser {
 	#currentToken() {
 		return this.#peek(0);
 	}
-	//lets us look ahead or the current token
+	//lets us look ahead of the current token Ex peek(1) will return the next token but not switch the position
 	#peek(offset) {
 		let index = this.#position + offset;
 		if (index >= this.#tokens.length) {
@@ -35,110 +37,55 @@ class Parser {
 			`Parser error: bad token type: ${this.#currentToken().tokenType}, expected ${type}`,
 		);
 	}
-	//returns current token and moves position by 1
-	#nextToken() {
+	//returns current token then increases position by 1
+	#nextToken(change = 1) {
 		let current = this.#currentToken();
-		this.#position++;
+		this.#position += change;
 		return current;
 	}
 
-	#getBinaryOperatorPriority(tokenType) {
-		switch (tokenType) {
-			case "multiplyToken":
-			case "divideToken":
-				return 2;
-			case "plusToken":
-			case "minusToken":
-				return 1;
-			default:
-				return 0;
-		}
-	}
-
-	#parseBinaryExpression(parentPriority = 0) {
-		let a = this.#parsePrimaryExpression();
-
-		while (true) {
-			let priority = this.#getBinaryOperatorPriority(this.#currentToken().tokenType);
-			if (priority === 0 || priority <= parentPriority) {
-				break;
-			}
-
-			let operator = this.#nextToken();
-			let b = this.#parseBinaryExpression(priority);
-			a = new BinaryExpression(a, operator, b);
-		}
-
-		return a;
-	}
-
-	#parsePrimaryExpression() {
-		const firstToken = this.#currentToken();
-
-		switch (firstToken.tokenType) {
-			case "openParenthesisToken":
-				let a = this.#nextToken();
-				let operator = this.#parseBinaryExpression();
-				let b = this.#match("closeParenthesisToken");
-				return new ParenthesisedExpression(a, operator, b);
-			case "unquotedStringToken":
-				let identifierToken = this.#nextToken();
-				return new VariableAccess(identifierToken.tokenValue);
-			case "stringToken":
-				return this.#match("stringToken");
-			case "previousToken":
-
-			default:
-				return this.#match("number");
-		}
-	}
-
 	#parseVariableAssignment() {
-		let type = this.#nextToken().tokenType;
-		let name = this.#match("unquotedStringToken").tokenValue;
-		this.#match("assignToken");
-
-		let value = this.#parseBinaryExpression();
-		return new VariableAssignment(type, name, value);
+		if (this.#currentToken().tokenType === "assignToken") {
+			throw new Error("How did this happen?");
+		} else {
+			return new VariableAssignment(
+				this.#nextToken().tokenType,
+				this.#nextToken(2).tokenValue,
+				this.#parseBinaryExpression(),
+			);
+		}
+	}
+	#parseBinaryExpression() {
+		if (this.#peek(1).tokenClass == "lineEndClass") {
+			return new Float(this.#nextToken().tokenValue);
+		} else {
+		}
+		let left = this.#nextToken();
+		let operator = this.#nextToken();
+		let right = this.#parseBinaryExpression();
+		return new BinaryExpression(left, operator, right);
 	}
 
-	#parseVariableReassignment() {
-		let name = this.#match("unquotedStringToken").tokenValue;
-
-		let assignmentOperator = this.#nextToken();
-		let variableValue = this.#parseBinaryExpression();
-		return new VariableModification(name, variableValue.tokenValue);
+	#parseLineEnd() {
+		if (this.#currentToken().tokenType === "questionMarkToken") {
+			return "debug";
+		} else {
+			return "normal";
+		}
 	}
 
 	parse() {
-		let ast;
-
-		switch (this.#currentToken().tokenType) {
-			case "constConstToken":
-			case "constVarToken":
-			case "varConstToken":
-			case "varVarToken":
+		var ast;
+		try {
+			if (this.#currentToken().tokenClass === "assignVariableClass") {
 				ast = this.#parseVariableAssignment();
-				break;
-			case "unquotedStringToken":
-				if (this.#peek(1).tokenType == "assignToken") {
-					ast = this.#parseVariableReassignment();
-				} else {
-					ast = this.#parseBinaryExpression();
-				}
-				break;
-			default:
+			} else if (this.#currentToken().tokenClass === "binaryClass") {
 				ast = this.#parseBinaryExpression();
-				break;
+			}
+		} catch (error) {
+			console.error(`Parser error: ${error}`);
 		}
-		if (
-			this.#tokens[this.#position].tokenType == "endOfLineDebugToken" &&
-			ast instanceof (BinaryExpression || VariableAccess || ParenthesisedExpression)
-		) {
-			ast = new Function("print", ast);
-		}
-
-		return ast;
+		return [ast, this.#parseLineEnd()];
 	}
 }
 

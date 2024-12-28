@@ -55,6 +55,12 @@ class Function extends SyntaxNode {
 		this.functionInput = functionInput;
 	}
 }
+class Float extends SyntaxNode {
+	constructor(floatValue) {
+		super();
+		this.floatValue = floatValue;
+	}
+}
 
 exports.SyntaxNode = SyntaxNode;
 exports.BinaryExpression = BinaryExpression;
@@ -63,3 +69,4 @@ exports.VariableAccess = VariableAccess;
 exports.ParenthesisedExpression = ParenthesisedExpression;
 exports.VariableModification = VariableModification;
 exports.Function = Function;
+exports.Float = Float;

@@ -38,11 +38,12 @@ function parseLine(input) {
 	console.log(tokens);
 
 	let parser = new Parser(tokens);
-	let ast = parser.parse();
-	/* console.log(ast); */
+	let ast = parser.parse()[0];
+	let extra = parser.parse()[1];
+	console.log(ast);
 
 	let evaluator = new Evaluator();
-	let output = evaluator.evaluate(ast);
+	let output = evaluator.evaluate(ast, extra);
 
 	return output;
 }
