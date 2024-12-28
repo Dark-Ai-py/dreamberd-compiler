@@ -15,14 +15,15 @@ class Lexer {
 			{ tokenType: "stringToken", regex: /'([^']*?)'|"([^"]*?)"/ },
 			{ tokenType: "openParenthesisToken", regex: /^\(/ },
 			{ tokenType: "closeParenthesisToken", regex: /^\)/ },
-			{ tokenType: "endOfLineNormalToken", regex: /^!+$/ },
-			{ tokenType: "endOfLineDebugToken", regex: /^\?+$/ },
+			{ tokenType: "questionMarkToken", regex: /^\?/ },
+			{ tokenType: "exclamationMarkToken", regex: /^\!/ },
 		];
 		this.keywords = [
 			{ tokenType: "constConstToken", regex: /^const const/ },
 			{ tokenType: "constVarToken", regex: /^const var/ },
 			{ tokenType: "varConstToken", regex: /^var const/ },
 			{ tokenType: "varVarToken", regex: /^var var/ },
+			{ tokenType: "previousToken", regex: /^previous/ },
 		];
 	}
 
@@ -53,7 +54,7 @@ class Lexer {
 				return;
 			}
 		}
-		this.tokens.push({ tokenType: "endOfFileToken", tokenValue: "\0" });
+		this.tokens.push({ tokenType: "endOfLineToken", tokenValue: "\x00" });
 		for (let tokenIndex = 0; tokenIndex < this.tokens.length; tokenIndex++) {
 			if (this.tokens[tokenIndex].tokenType == "whitespace") {
 				this.tokens.splice(tokenIndex, 1);

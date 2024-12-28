@@ -1,4 +1,5 @@
 const const x = 14?
-var var y = 2!!
+var const y = 2!!
 y = 3
-x*y?
+x?
+y?

@@ -41,10 +41,10 @@ class ParenthesisedExpression extends SyntaxNode {
 }
 
 class VariableModification extends SyntaxNode {
-	constructor(variableName, assignmentOperator, newValue) {
+	constructor(variableName, newValue) {
 		super();
 		this.variableName = variableName;
-		this.assignmentOperator = assignmentOperator;
+		//this.assignmentOperator = assignmentOperator;
 		this.newValue = newValue;
 	}
 }

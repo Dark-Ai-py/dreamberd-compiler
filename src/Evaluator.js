@@ -9,7 +9,10 @@ const {
 
 class Evaluator {
 	constructor() {
-		this.functionList = [{ functionType: "print", output: `console.log(%i)` }];
+		this.functionList = [
+			{ functionType: "print", output: `console.log(%i)` },
+			{ functionType: "previous", output: "%i.previous()" },
+		];
 	}
 	getFunction(func, input) {
 		for (let i = 0; i < this.functionList.length; i++) {
@@ -33,7 +36,9 @@ class Evaluator {
 		if (ast instanceof VariableAccess) {
 			return `${ast.variableName}.variableValue`;
 		}
-
+		if (ast instanceof VariableModification) {
+			return `${ast.variableName}.reAssign(${ast.newValue})`;
+		}
 		if (ast instanceof BinaryExpression) {
 			const a = this.evaluate(ast.a);
 			const b = this.evaluate(ast.b);

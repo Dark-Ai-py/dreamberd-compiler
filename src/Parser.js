@@ -86,6 +86,8 @@ class Parser {
 				return new VariableAccess(identifierToken.tokenValue);
 			case "stringToken":
 				return this.#match("stringToken");
+			case "previousToken":
+
 			default:
 				return this.#match("number");
 		}
@@ -94,19 +96,18 @@ class Parser {
 	#parseVariableAssignment() {
 		let type = this.#nextToken().tokenType;
 		let name = this.#match("unquotedStringToken").tokenValue;
-		let assignment = this.#match("assignToken");
-		let value;
+		this.#match("assignToken");
 
-		value = this.#parseBinaryExpression();
+		let value = this.#parseBinaryExpression();
 		return new VariableAssignment(type, name, value);
 	}
 
 	#parseVariableReassignment() {
-		let name = this.#match("unquotedStringToken");
+		let name = this.#match("unquotedStringToken").tokenValue;
+
 		let assignmentOperator = this.#nextToken();
-		let value;
-		value = this.#parseBinaryExpression();
-		return new VariableModification(name, assignmentOperator, value);
+		let variableValue = this.#parseBinaryExpression();
+		return new VariableModification(name, variableValue.tokenValue);
 	}
 
 	parse() {
@@ -119,8 +120,12 @@ class Parser {
 			case "varVarToken":
 				ast = this.#parseVariableAssignment();
 				break;
-			case "unquotedStringToken" && this.#peek(1) == "assignToken":
-				ast = this.#parseVariableReassignment();
+			case "unquotedStringToken":
+				if (this.#peek(1).tokenType == "assignToken") {
+					ast = this.#parseVariableReassignment();
+				} else {
+					ast = this.#parseBinaryExpression();
+				}
 				break;
 			default:
 				ast = this.#parseBinaryExpression();

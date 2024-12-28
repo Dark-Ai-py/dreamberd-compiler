@@ -35,10 +35,11 @@ function readFile(path) {
 function parseLine(input) {
 	let lexer = new Lexer(input);
 	let tokens = lexer.tokenize();
+	console.log(tokens);
 
 	let parser = new Parser(tokens);
 	let ast = parser.parse();
-	console.log(ast);
+	/* console.log(ast); */
 
 	let evaluator = new Evaluator();
 	let output = evaluator.evaluate(ast);

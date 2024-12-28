@@ -12,11 +12,11 @@ class Variable extends ClassNode {
 	reAssign(newValue) {
 		switch (this.variableType) {
 			case "constConstToken":
-				console.log("Error: cannot reassign variable");
+				console.log("Error: cannot reassign a variable");
 
 				break;
 			case "constVarToken":
-				console.log("Error: cannot reassign variable");
+				console.log("Error: cannot reassign a variable");
 				break;
 			case "varConstToken":
 				this.variableValue = newValue;
