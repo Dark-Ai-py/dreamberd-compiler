@@ -6,14 +6,20 @@ const {
 	VariableModification,
 	Function,
 	Float,
+	String,
 } = require("./expressionTypes");
 
 class Evaluator {
-	constructor() {}
+	constructor() {
+		this.functionList = [{ functionType: "print", functionScript: "console.log(%i);" }];
+	}
 
-	evaluate(ast, linetype) {
+	evaluate(ast, linetype = "normal") {
 		if (ast instanceof Float) {
 			return ast.floatValue;
+		}
+		if (ast instanceof String) {
+			return ast.stringValue;
 		}
 		if (ast instanceof VariableAssignment) {
 			if (linetype == "debug") {
@@ -21,16 +27,16 @@ class Evaluator {
 					ast.variableName
 				}',${this.evaluate(ast.variableValue)})\nconsole.log("${ast.variableName} = "+ ${
 					ast.variableName
-				}.variableValue)`;
+				}.variableValue);`;
 			} else {
 				return `let ${ast.variableName} = new Variable('${ast.variableType}','${
 					ast.variableName
-				}',${this.evaluate(ast.variableValue)})`;
+				}',${this.evaluate(ast.variableValue)});`;
 			}
 		}
 		if (ast instanceof VariableAccess) {
 			if (linetype == "debug") {
-				return `console.log(${ast.variableName}.variableValue)`;
+				return `console.log(${ast.variableName}.variableValue);`;
 			} else {
 				return `${ast.variableName}.variableValue`;
 			}
@@ -43,8 +49,16 @@ class Evaluator {
 			const b = this.evaluate(ast.b);
 			const operator = ast.operatorToken.tokenValue;
 			return `${a} ${operator} ${b}`;
+		}
+		if (ast instanceof Function) {
+			const functionScript = this.functionList.find(
+				(element) => element.functionType === ast.functionType,
+			).functionScript;
+			return functionScript.replace("%i", this.evaluate(ast.functionInput));
 		} else {
-			console.log(`Evaluator Error: Unsupported Syntax Node(u broke something) ${ast}`);
+			console.log(
+				`Evaluator Error: Unsupported Syntax Node(u broke something) ${ast}, ${linetype}`,
+			);
 		}
 	}
 }

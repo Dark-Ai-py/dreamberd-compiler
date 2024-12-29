@@ -3,6 +3,7 @@ const readline = require("readline");
 const { Lexer } = require("./lexer");
 const { Parser } = require("./Parser");
 const { Evaluator } = require("./Evaluator");
+const { log } = require("console");
 
 //make the terminal interface
 async function getStdin() {
@@ -45,10 +46,11 @@ function sortByImportance(lines) {
 function parseLine(input) {
 	let lexer = new Lexer(input);
 	let tokens = lexer.tokenize();
-	console.log(tokens);
+	//console.log(tokens);
 
 	let parser = new Parser(tokens);
 	let fullAst = parser.parse();
+	console.log(fullAst[0]);
 
 	let evaluator = new Evaluator();
 	let output = evaluator.evaluate(fullAst[0], fullAst[1]);

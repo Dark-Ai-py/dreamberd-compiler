@@ -7,6 +7,7 @@ const {
 	VariableModification,
 	Function,
 	Float,
+	String,
 } = require("./expressionTypes");
 
 class Parser {
@@ -81,11 +82,13 @@ class Parser {
 					this.#nextToken(2).tokenValue,
 					this.#parseBinaryExpression(),
 				);
-			} else if (this.#peek(1).tokenClass === "lineEndClass") {
+			} else if (this.#peek(1).tokenType === "openParenthesisToken") {
+				return new Function(this.#nextToken(2).tokenValue, this.parse()[0]);
+			} else {
 				return new VariableAccess(this.#nextToken().tokenValue);
 			}
 		} else {
-			throw new Error("Parser error: Why is there an string here?");
+			return new String(this.#nextToken().tokenValue);
 		}
 	}
 
