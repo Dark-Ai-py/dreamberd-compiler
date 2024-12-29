@@ -25,9 +25,7 @@ class Evaluator {
 			if (linetype == "debug") {
 				return `let ${ast.variableName} = new Variable('${ast.variableType}','${
 					ast.variableName
-				}',${this.evaluate(ast.variableValue)})\nconsole.log("${ast.variableName} = "+ ${
-					ast.variableName
-				}.variableValue);`;
+				}',${this.evaluate(ast.variableValue)})\nconsole.log("${ast.variableName}.debug());`;
 			} else {
 				return `let ${ast.variableName} = new Variable('${ast.variableType}','${
 					ast.variableName
@@ -36,7 +34,7 @@ class Evaluator {
 		}
 		if (ast instanceof VariableAccess) {
 			if (linetype == "debug") {
-				return `console.log(${ast.variableName}.variableValue);`;
+				return `console.log(${ast.variableName}.debug());`;
 			} else {
 				return `${ast.variableName}.variableValue`;
 			}

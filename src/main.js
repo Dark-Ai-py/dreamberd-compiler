@@ -16,14 +16,8 @@ function readFile(path) {
 	}
 }
 
-function sortByImportance(lines) {
-	return lines
-		.map((line) => ({
-			original: line,
-			Importance: line.match(/[\!]+$|[?]+$/)?.[0]?.length || 0,
-		}))
-		.sort((a, b) => b.Importance - a.Importance)
-		.map((obj) => obj.original);
+function cleanUpFormating(content) {
+	return content;
 }
 
 function parseLine(input) {
@@ -60,7 +54,7 @@ function writeBuild(content) {
 async function main() {
 	while (true) {
 		const file = readFile("helloWorld.dream");
-		const sortedFile = sortByImportance(file);
+		const sortedFile = cleanUpFormating(file);
 		writeBuild(sortedFile);
 		break;
 	}

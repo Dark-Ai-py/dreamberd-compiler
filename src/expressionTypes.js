@@ -67,6 +67,13 @@ class String extends SyntaxNode {
 		this.stringValue = stringValue;
 	}
 }
+class Conditional extends SyntaxNode {
+	constructor(conditionalType, condition) {
+		super();
+		this.conditionalType = conditionalType;
+		this.condition = condition;
+	}
+}
 
 exports.SyntaxNode = SyntaxNode;
 exports.BinaryExpression = BinaryExpression;

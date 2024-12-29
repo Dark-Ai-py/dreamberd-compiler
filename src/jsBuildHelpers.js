@@ -2,12 +2,16 @@ class ClassNode {
 	constructor() {}
 }
 class Variable extends ClassNode {
-	variableValue;
 	constructor(variableType, variableName, variableValue) {
 		super();
 		this.variableType = variableType;
 		this.variableName = variableName;
 		this.variableValue = variableValue;
+	}
+	debug() {
+		return `${this.variableName}:\n Value: ${
+			this.variableValue
+		}\n Type: ${this.variableType.slice(0, -5)}`;
 	}
 	reAssign(newValue) {
 		switch (this.variableType) {

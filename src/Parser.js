@@ -44,15 +44,11 @@ class Parser {
 	}
 
 	#parseVariableAssignment() {
-		if (this.#currentToken().tokenType === "assignToken") {
-			throw new Error("Unexpected assignToken");
-		} else {
-			return new VariableAssignment(
-				this.#nextToken().tokenType,
-				this.#nextToken(2).tokenValue,
-				this.#parseBinaryExpression(),
-			);
-		}
+		return new VariableAssignment(
+			this.#nextToken().tokenType,
+			this.#nextToken(2).tokenValue,
+			this.#parseBinaryExpression(),
+		);
 	}
 	#parseBinaryExpression() {
 		if (this.#peek(1).tokenClass == "lineEndClass") {
@@ -80,6 +76,8 @@ class Parser {
 					this.#nextToken(2).tokenValue,
 					this.#parseBinaryExpression(),
 				);
+			} else if (this.#currentToken().tokenValue === "if") {
+				return #parseConditionalStatement()
 			} else if (this.#peek(1).tokenType === "openParenthesisToken") {
 				return new Function(this.#nextToken(2).tokenValue, this.parse()[0]);
 			} else {
@@ -89,6 +87,10 @@ class Parser {
 			return new String(this.#nextToken().tokenValue);
 		}
 	}
+
+	#parseConditionalStatement() {
+		
+	 }
 
 	parse() {
 		var ast;
