@@ -56,9 +56,7 @@ class Evaluator {
 			).functionScript;
 			return functionScript.replace("%i", this.evaluate(ast.functionInput));
 		} else {
-			console.log(
-				`Evaluator Error: Unsupported Syntax Node(u broke something) ${ast}, ${linetype}`,
-			);
+			console.error(`Evaluator Error: Unsupported Syntax Node ${ast}`);
 		}
 	}
 }

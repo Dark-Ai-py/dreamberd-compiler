@@ -34,9 +34,7 @@ class Parser {
 		if (this.#currentToken().tokenType === type) {
 			return this.#nextToken();
 		}
-		console.log(
-			`Parser error: bad token type: ${this.#currentToken().tokenType}, expected ${type}`,
-		);
+		throw new Error(`Unexpected token ${this.#currentToken().tokenType}`);
 	}
 	//returns current token then increases position by 1
 	#nextToken(change = 1) {
@@ -47,7 +45,7 @@ class Parser {
 
 	#parseVariableAssignment() {
 		if (this.#currentToken().tokenType === "assignToken") {
-			throw new Error("How did this happen?");
+			throw new Error("Unexpected assignToken");
 		} else {
 			return new VariableAssignment(
 				this.#nextToken().tokenType,

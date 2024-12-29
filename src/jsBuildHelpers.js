@@ -12,11 +12,11 @@ class Variable extends ClassNode {
 	reAssign(newValue) {
 		switch (this.variableType) {
 			case "constConstToken":
-				console.log("Error: cannot reassign a variable");
+				console.error("Build Helpers Error: cannot reassign a variable");
 
 				break;
 			case "constVarToken":
-				console.log("Error: cannot reassign a variable");
+				console.error("Build Helpers Error: cannot reassign a variable");
 				break;
 			case "varConstToken":
 				this.variableValue = newValue;
@@ -29,12 +29,12 @@ class Variable extends ClassNode {
 	mutate() {
 		switch (this.variableType) {
 			case "constConstToken":
-				console.log("Error: cannot mutate variable");
+				console.error("Build Helpers Error: cannot mutate variable");
 				break;
 			case "constVarToken":
 				return this.variableValue;
 			case "varConstToken":
-				console.log("Error: cannot mutate variable");
+				console.error("Build Helpers Error: cannot mutate variable");
 				break;
 			case "varVarToken":
 				return this.variableValue;

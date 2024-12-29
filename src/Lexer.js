@@ -50,7 +50,7 @@ class Lexer {
 				}
 			}
 			if (!matchedToken) {
-				console.log(`Lexer error: unrecognized token ${this.inputText.slice(currentIndex)}`);
+				console.error(`Lexer error: unrecognized token ${this.inputText.slice(currentIndex)}`);
 				return;
 			}
 		}
