@@ -1,6 +1,3 @@
 const const x = 14!
 var var y = 12!!
 x?
-if (x > y) {
-   print(x)!
-}

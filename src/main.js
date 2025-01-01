@@ -21,16 +21,29 @@ function cleanUpFormating(content) {
 }
 
 function parseLine(input) {
-	let lexer = new Lexer(input);
-	let tokens = lexer.tokenize();
+	try {
+		if (!input) throw new Error("Input is required");
 
-	let parser = new Parser(tokens);
-	let fullAst = parser.parse();
+		let lexer = new Lexer(input);
+		let tokens = lexer.tokenize();
 
-	let evaluator = new Evaluator();
-	let output = evaluator.evaluate(fullAst[0], fullAst[1]);
+		if (!tokens || tokens.length === 0) throw new Error("Tokenization failed");
 
-	return output;
+		let parser = new Parser(tokens);
+		let fullAst = parser.parse();
+
+		if (!fullAst || fullAst.length !== 2) throw new Error("Parsing failed");
+
+		let evaluator = new Evaluator();
+		let output = evaluator.evaluate(fullAst[0], fullAst[1]);
+
+		if (output === undefined) throw new Error("Evaluation failed");
+
+		return output;
+	} catch (error) {
+		console.error(`Main Error: ${error.message}`);
+		return null;
+	}
 }
 function writeBuild(content) {
 	var fullOutput = ['const { Variable } = require("./jsBuildHelpers.js");'];
@@ -46,7 +59,7 @@ function writeBuild(content) {
 	const filePath = "./build.js";
 	fs.writeFile(filePath, completeBuild, (err) => {
 		if (err) {
-			console.error("Error writing to file:", err);
+			console.error(`Error writing to file: ${err}`);
 		}
 	});
 }

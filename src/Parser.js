@@ -47,7 +47,7 @@ class Parser {
 		return new VariableAssignment(
 			this.#nextToken().tokenType,
 			this.#nextToken(2).tokenValue,
-			this.#parseBinaryExpression(),
+			this.#parseBinaryExpression()
 		);
 	}
 	#parseBinaryExpression() {
@@ -74,10 +74,11 @@ class Parser {
 			if (this.#peek(1).tokenType === "assignToken") {
 				return new VariableModification(
 					this.#nextToken(2).tokenValue,
-					this.#parseBinaryExpression(),
+					this.#parseBinaryExpression()
 				);
 			} else if (this.#currentToken().tokenValue === "if") {
-				return #parseConditionalStatement()
+				throw new Error("Conditional statements are not yet supported");
+				//TODO: Implement conditional statements
 			} else if (this.#peek(1).tokenType === "openParenthesisToken") {
 				return new Function(this.#nextToken(2).tokenValue, this.parse()[0]);
 			} else {
@@ -88,24 +89,27 @@ class Parser {
 		}
 	}
 
-	#parseConditionalStatement() {
-		
-	 }
+	#parseConditionalStatement() {}
 
+	/**
+	 * Parses the given tokens and returns an Abstract Syntax Tree (AST)
+	 */
 	parse() {
-		var ast;
+		const { tokenType, tokenClass, tokenValue } = this.#currentToken();
 		try {
-			if (this.#currentToken().tokenClass === "assignVariableClass") {
-				ast = this.#parseVariableAssignment();
-			} else if (this.#currentToken().tokenClass === "binaryClass") {
-				ast = this.#parseBinaryExpression();
-			} else if (this.#currentToken().tokenClass === "stringClass") {
-				ast = this.#parseString();
+			switch (tokenClass) {
+				case "assignVariableClass":
+					return [this.#parseVariableAssignment(), this.#parseLineEnd()];
+				case "binaryClass":
+					return [this.#parseBinaryExpression(), this.#parseLineEnd()];
+				case "stringClass":
+					return [this.#parseString(), this.#parseLineEnd()];
+				default:
+					throw new Error(`Unexpected token type ${tokenType}`);
 			}
 		} catch (error) {
 			console.error(`Parser error: ${error}`);
 		}
-		return [ast, this.#parseLineEnd()];
 	}
 }
 
