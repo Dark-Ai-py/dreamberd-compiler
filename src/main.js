@@ -31,6 +31,7 @@ function parseLine(input) {
 
 		let parser = new Parser(tokens);
 		let fullAst = parser.parse();
+		console.log(fullAst);
 
 		if (!fullAst || fullAst.length !== 2) throw new Error("Parsing failed");
 
@@ -46,7 +47,7 @@ function parseLine(input) {
 	}
 }
 function writeBuild(content) {
-	var fullOutput = ['const { Variable } = require("./jsBuildHelpers.js");'];
+	var fullOutput = ['const { Variable, DateObject } = require("./jsBuildHelpers.js");'];
 	for (let i = 0; i < content.length; i++) {
 		let parsedOutput = parseLine(content[i]);
 		fullOutput.push(parsedOutput);

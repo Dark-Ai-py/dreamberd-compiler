@@ -3,29 +3,94 @@ class Lexer {
 		this.inputText = inputText;
 		this.tokens = [];
 		this.tokenTypes = [
-			{ tokenType: "constConstToken", tokenClass: "assignVariableClass", regex: /^const const/ },
-			{ tokenType: "constVarToken", tokenClass: "assignVariableClass", regex: /^const var/ },
-			{ tokenType: "varConstToken", tokenClass: "assignVariableClass", regex: /^var const/ },
-			{ tokenType: "varVarToken", tokenClass: "assignVariableClass", regex: /^var var/ },
-			{ tokenType: "number", tokenClass: "binaryClass", regex: /^-?[0-9]\d*(\.\d+)?/ },
-			{ tokenType: "plusToken", tokenClass: "binaryOperatorClass", regex: /^\+/ },
-			{ tokenType: "minusToken", tokenClass: "binaryOperatorClass", regex: /^\-/ },
-			{ tokenType: "multiplyToken", tokenClass: "binaryOperatorClass", regex: /^\*/ },
-			{ tokenType: "divideToken", tokenClass: "binaryOperatorClass", regex: /^\// },
+			{
+				tokenType: "constConstToken",
+				tokenClass: "assignVariableClass",
+				regex: /^const const/,
+			},
+			{
+				tokenType: "constVarToken",
+				tokenClass: "assignVariableClass",
+				regex: /^const var/,
+			},
+			{
+				tokenType: "varConstToken",
+				tokenClass: "assignVariableClass",
+				regex: /^var const/,
+			},
+			{
+				tokenType: "varVarToken",
+				tokenClass: "assignVariableClass",
+				regex: /^var var/,
+			},
+			{
+				tokenType: "number",
+				tokenClass: "binaryClass",
+				regex: /^-?[0-9]\d*(\.\d+)?/,
+			},
+			{
+				tokenType: "plusToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\+/,
+			},
+			{
+				tokenType: "minusToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\-/,
+			},
+			{
+				tokenType: "multiplyToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\*/,
+			},
+			{
+				tokenType: "divideToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\//,
+			},
 			{ tokenType: "whitespace", regex: /^\s/ },
 			{ tokenType: "assignToken", regex: /^\+=|^\-=|^=/ },
 			{ tokenType: "notToken", tokenClass: "binaryOperatorClass", regex: /^;/ },
-			{ tokenType: "unquotedStringToken", tokenClass: "stringClass", regex: /^[A-Za-z]+/ },
-			{ tokenType: "stringToken", tokenClass: "stringCLass", regex: /'([^']*?)'|"([^"]*?)"/ },
+			{
+				tokenType: "unquotedStringToken",
+				tokenClass: "stringClass",
+				regex: /^[A-Za-z]+/,
+			},
+			{
+				tokenType: "stringToken",
+				tokenClass: "stringCLass",
+				regex: /'([^']*?)'|"([^"]*?)"/,
+			},
 			{ tokenType: "openParenthesisToken", regex: /^\(/ },
 			{ tokenType: "closeParenthesisToken", regex: /^\)/ },
 			{ tokenType: "openCurlyBracketToken", regex: /^\{/ },
 			{ tokenType: "closeCurlyBracketToken", regex: /^\}/ },
-			{ tokenType: "notToken", tokenClass: "binaryOperatorClass", regex: /^\;/ },
-			{ tokenType: "greaterThanToken", tokenClass: "binaryOperatorClass", regex: /^\>/ },
-			{ tokenType: "lessThanToken", tokenClass: "binaryOperatorClass", regex: /^\</ },
-			{ tokenType: "questionMarkToken", tokenClass: "lineEndClass", regex: /^\?/ },
-			{ tokenType: "exclamationMarkToken", tokenClass: "lineEndClass", regex: /^\!/ },
+			{
+				tokenType: "notToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\;/,
+			},
+			{
+				tokenType: "greaterThanToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\>/,
+			},
+			{
+				tokenType: "lessThanToken",
+				tokenClass: "binaryOperatorClass",
+				regex: /^\</,
+			},
+			{
+				tokenType: "questionMarkToken",
+				tokenClass: "lineEndClass",
+				regex: /^\?/,
+			},
+			{
+				tokenType: "exclamationMarkToken",
+				tokenClass: "lineEndClass",
+				regex: /^\!/,
+			},
+			{ tokenType: "periodToken", regex: /^\./ },
 		];
 	}
 
@@ -35,7 +100,9 @@ class Lexer {
 			let matchedToken = null;
 
 			for (const tokenType of [...this.tokenTypes]) {
-				const regexResult = this.inputText.slice(currentIndex).match(tokenType.regex);
+				const regexResult = this.inputText
+					.slice(currentIndex)
+					.match(tokenType.regex);
 				if (regexResult && regexResult.index === 0) {
 					let value = regexResult[0];
 					currentIndex += value.length;
@@ -55,7 +122,11 @@ class Lexer {
 				}
 			}
 			if (!matchedToken) {
-				console.error(`Lexer error: unrecognized token ${this.inputText.slice(currentIndex)}`);
+				console.error(
+					`Lexer error: unrecognized token ${this.inputText.slice(
+						currentIndex
+					)}`
+				);
 				return;
 			}
 		}

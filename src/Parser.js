@@ -1,4 +1,3 @@
-const { parse } = require("vue/compiler-sfc");
 const {
 	BinaryExpression,
 	VariableAssignment,

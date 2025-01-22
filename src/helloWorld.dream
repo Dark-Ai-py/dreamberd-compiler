@@ -1,3 +1,4 @@
 const const x = 14!
 var var y = 12!!
 x?
+print(Date.now())!
