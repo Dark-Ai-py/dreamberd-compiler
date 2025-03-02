@@ -50,7 +50,7 @@ class Parser {
 		);
 	}
 	#parseBinaryExpression() {
-		if (this.#peek(1).tokenClass == "lineEndClass") {
+		if (this.#peek(1).tokenClass === "lineEndClass") {
 			return new Float(this.#nextToken().tokenValue);
 		} else {
 		}

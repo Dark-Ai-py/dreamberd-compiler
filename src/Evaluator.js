@@ -23,7 +23,7 @@ class Evaluator {
 			case String:
 				return ast.stringValue;
 			case VariableAssignment:
-				if (linetype == "debug") {
+				if (linetype === "debug") {
 					return `let ${ast.variableName} = new Variable('${
 						ast.variableType
 					}','${ast.variableName}',${this.evaluate(
@@ -35,7 +35,7 @@ class Evaluator {
 					}','${ast.variableName}',${this.evaluate(ast.variableValue)});`;
 				}
 			case VariableAccess:
-				if (linetype == "debug") {
+				if (linetype === "debug") {
 					return `console.log(${ast.variableName}.debug());`;
 				} else {
 					return `${ast.variableName}.variableValue`;

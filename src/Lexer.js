@@ -36,7 +36,7 @@ class Lexer {
 			{
 				tokenType: "minusToken",
 				tokenClass: "binaryOperatorClass",
-				regex: /^\-/,
+				regex: /^-/,
 			},
 			{
 				tokenType: "multiplyToken",
@@ -49,7 +49,7 @@ class Lexer {
 				regex: /^\//,
 			},
 			{ tokenType: "whitespace", regex: /^\s/ },
-			{ tokenType: "assignToken", regex: /^\+=|^\-=|^=/ },
+			{ tokenType: "assignToken", regex: /^\+=|^-=|^=/ },
 			{ tokenType: "notToken", tokenClass: "binaryOperatorClass", regex: /^;/ },
 			{
 				tokenType: "unquotedStringToken",
@@ -64,21 +64,21 @@ class Lexer {
 			{ tokenType: "openParenthesisToken", regex: /^\(/ },
 			{ tokenType: "closeParenthesisToken", regex: /^\)/ },
 			{ tokenType: "openCurlyBracketToken", regex: /^\{/ },
-			{ tokenType: "closeCurlyBracketToken", regex: /^\}/ },
+			{ tokenType: "closeCurlyBracketToken", regex: /^}/ },
 			{
 				tokenType: "notToken",
 				tokenClass: "binaryOperatorClass",
-				regex: /^\;/,
+				regex: /^;/,
 			},
 			{
 				tokenType: "greaterThanToken",
 				tokenClass: "binaryOperatorClass",
-				regex: /^\>/,
+				regex: /^>/,
 			},
 			{
 				tokenType: "lessThanToken",
 				tokenClass: "binaryOperatorClass",
-				regex: /^\</,
+				regex: /^</,
 			},
 			{
 				tokenType: "questionMarkToken",
@@ -88,7 +88,7 @@ class Lexer {
 			{
 				tokenType: "exclamationMarkToken",
 				tokenClass: "lineEndClass",
-				regex: /^\!/,
+				regex: /^!/,
 			},
 			{ tokenType: "periodToken", regex: /^\./ },
 		];
@@ -107,10 +107,10 @@ class Lexer {
 					let value = regexResult[0];
 					currentIndex += value.length;
 					matchedToken = tokenType.tokenType;
-					if (tokenType.tokenType == "stringToken") {
+					if (tokenType.tokenType === "stringToken") {
 						value = regexResult[1];
 					}
-					if (tokenType.tokenType == "number" && value.match(/^\-/)) {
+					if (tokenType.tokenType === "number" && value.match(/^-/)) {
 						this.tokens.push({ tokenType: "plusToken", tokenValue: "+" });
 					}
 					this.tokens.push({
@@ -132,7 +132,7 @@ class Lexer {
 		}
 		this.tokens.push({ tokenType: "endOfLineToken", tokenValue: "\x00" });
 		for (let tokenIndex = 0; tokenIndex < this.tokens.length; tokenIndex++) {
-			if (this.tokens[tokenIndex].tokenType == "whitespace") {
+			if (this.tokens[tokenIndex].tokenType === "whitespace") {
 				this.tokens.splice(tokenIndex, 1);
 			}
 		}
